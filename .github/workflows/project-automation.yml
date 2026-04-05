@@ -1,0 +1,132 @@
+name: Project Board Automation
+
+on:
+  issues:
+    types: [opened, closed, reopened, assigned, unassigned, labeled]
+  pull_request:
+    types: [opened, closed, reopened, review_requested, ready_for_review]
+  issue_comment:
+    types: [created]
+
+env:
+  PROJECT_NUMBER: 1  # Update with your project number
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - uses: actions/add-to-project@v0.5.0
+        with:
+          project-url: https://github.com/users/${{ github.repository_owner }}/projects/${{ env.PROJECT_NUMBER }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  move-to-in-progress:
+    name: Move to In Progress
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issues' && github.event.action == 'assigned') ||
+      (github.event_name == 'pull_request' && github.event.action == 'opened')
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: Chinese Learning App
+          column: In Progress
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  move-to-review:
+    name: Move to Review
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'pull_request' && 
+      (github.event.action == 'ready_for_review' || github.event.action == 'review_requested')
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: Chinese Learning App
+          column: Review
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  move-to-done:
+    name: Move to Done
+    runs-on: ubuntu-latest
+    if: |
+      (github.event_name == 'issues' && github.event.action == 'closed') ||
+      (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged)
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: Chinese Learning App
+          column: Done
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+  handle-commands:
+    name: Handle slash commands in comments
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && github.event.action == 'created'
+    steps:
+      - name: Check for commands
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = context.payload.comment.body;
+            const issue = context.payload.issue;
+            
+            // Handle /assign command
+            if (comment.startsWith('/assign')) {
+              const assignee = comment.split(' ')[1] || context.actor;
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                assignees: [assignee]
+              });
+            }
+            
+            // Handle /priority command
+            if (comment.match(/^\/priority (P[0-3]|high|medium|low)/)) {
+              const priority = comment.split(' ')[1];
+              const labelMap = {
+                'P0': 'priority:critical',
+                'P1': 'priority:high',
+                'P2': 'priority:medium',
+                'P3': 'priority:low',
+                'high': 'priority:high',
+                'medium': 'priority:medium',
+                'low': 'priority:low'
+              };
+              
+              // Remove existing priority labels
+              const labels = issue.labels.filter(l => !l.name.startsWith('priority:'));
+              labels.push({ name: labelMap[priority] });
+              
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels.map(l => l.name)
+              });
+            }
+            
+            // Handle /estimate command
+            if (comment.match(/^\/estimate (XS|S|M|L|XL|XXL)/)) {
+              const size = comment.split(' ')[1];
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: [`size:${size}`]
+              });
+            }
+            
+            // Handle /status command
+            if (comment.match(/^\/status (todo|in-progress|review|done|blocked)/)) {
+              const status = comment.split(' ')[1];
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: [`status:${status}`]
+              });
+            }

@@ -1,0 +1,80 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+server
+chinese-graph
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+coverage.out
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yml
+
+# Neo4j data
+neo4j_data/
+neo4j_logs/
+redis_data/
+
+# Build artifacts
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Frontend (for future)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+
+# Frontend build
+frontend/build/
+frontend/dist/
+
+# Mobile
+mobile/ios/Pods/
+mobile/android/build/
+mobile/android/app/build/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Generated files (keep schema.resolvers.go as it has implementations)
+graph/generated/
+graph/model/
+
+# Air for hot reload
+tmp/

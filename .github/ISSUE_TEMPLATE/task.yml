@@ -1,0 +1,114 @@
+name: 📋 Task
+description: Create a development task
+title: "[Task]: "
+labels: ["task"]
+assignees:
+  - annakhvorostianova
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create a new development task for tracking work.
+
+  - type: input
+    id: title
+    attributes:
+      label: Task Title
+      description: Brief title for the task
+      placeholder: e.g., "Implement user authentication"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Task Type
+      options:
+        - 🏗️ Architecture
+        - ✨ Feature
+        - 🐛 Bug Fix
+        - 🔧 Refactoring
+        - 📝 Documentation
+        - 🧪 Testing
+        - 🚀 Deployment
+        - 🎨 Design/UI
+      default: 1
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Detailed description of what needs to be done
+      placeholder: |
+        ### Context
+        Why this task is needed...
+        
+        ### Requirements
+        - [ ] Requirement 1
+        - [ ] Requirement 2
+        
+        ### Technical Details
+        Any technical considerations...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How do we know when this task is complete?
+      placeholder: |
+        - [ ] Tests pass
+        - [ ] Feature works as expected
+        - [ ] Documentation updated
+    validations:
+      required: true
+
+  - type: dropdown
+    id: size
+    attributes:
+      label: Estimated Size
+      description: T-shirt size estimate
+      options:
+        - XS (< 2 hours)
+        - S (2-4 hours)
+        - M (4-8 hours)
+        - L (1-2 days)
+        - XL (3-5 days)
+        - XXL (> 1 week)
+      default: 2
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - 🔴 P0 - Critical (do now)
+        - 🟠 P1 - High (do this week)
+        - 🟡 P2 - Medium (do this sprint)
+        - 🟢 P3 - Low (backlog)
+      default: 2
+    validations:
+      required: true
+
+  - type: input
+    id: milestone
+    attributes:
+      label: Milestone
+      description: Which milestone does this belong to?
+      placeholder: e.g., "MVP", "v1.0", "Mobile Release"
+
+  - type: checkboxes
+    id: dependencies
+    attributes:
+      label: Dependencies
+      options:
+        - label: Depends on other tasks (list in description)
+        - label: Blocks other work
+        - label: Needs design review
+        - label: Needs technical review
+        - label: Requires database migration
+        - label: Requires API changes

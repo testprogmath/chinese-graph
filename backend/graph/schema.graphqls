@@ -1,0 +1,126 @@
+# Chinese Learning Graph Schema
+
+type Word {
+  id: ID!
+  hanzi: String!
+  traditional: String
+  pinyin: String!
+  meanings: [String!]!
+  hskLevel: Int
+  frequency: Int!
+  compounds: [WordRelation!]!
+  phrases: [WordRelation!]!
+  similarWords: [WordRelation!]!
+  oppositeWords: [WordRelation!]!
+  componentOf: [WordRelation!]!
+  hasComponents: [WordRelation!]!
+}
+
+type WordRelation {
+  word: Word!
+  relationshipType: RelationType!
+  phrase: String
+  meaning: String!
+  pinyin: String
+  usageExample: String
+  context: String
+}
+
+enum RelationType {
+  COMPOUND      # 组成复合词 (好看)
+  PHRASE        # 组成短语 (你好)
+  SIMILAR       # 相似含义
+  OPPOSITE      # 相反含义
+  COMPONENT     # 作为部件
+  MODIFIER      # 修饰关系 (很好)
+  MEASURE       # 量词关系
+}
+
+type WordGraph {
+  centerWord: Word!
+  nodes: [WordNode!]!
+  edges: [Edge!]!
+  depth: Int!
+}
+
+type WordNode {
+  id: ID!
+  word: Word!
+  distance: Int!  # Distance from center word
+  importance: Float!  # Calculated importance in graph
+}
+
+type Edge {
+  id: ID!
+  source: ID!
+  target: ID!
+  type: RelationType!
+  label: String!
+  weight: Float!  # Relationship strength
+  bidirectional: Boolean!
+}
+
+type LearningStats {
+  wordId: ID!
+  timesReviewed: Int!
+  correctCount: Int!
+  lastReviewed: String
+  strength: Float!  # 0.0 to 1.0
+}
+
+input WordInput {
+  hanzi: String!
+  traditional: String
+  pinyin: String!
+  meanings: [String!]!
+  hskLevel: Int
+  frequency: Int
+}
+
+input RelationInput {
+  sourceId: ID!
+  targetId: ID!
+  type: RelationType!
+  phrase: String
+  meaning: String!
+  pinyin: String
+  usageExample: String
+}
+
+type Query {
+  # Single word operations
+  word(hanzi: String!): Word
+  wordById(id: ID!): Word
+  
+  # Graph operations
+  wordGraph(hanzi: String!, depth: Int = 2, maxNodes: Int = 30): WordGraph!
+  
+  # Search and discovery
+  searchWords(query: String!, limit: Int = 20): [Word!]!
+  wordsByHSK(level: Int!, limit: Int = 50): [Word!]!
+  dailyWords(count: Int = 10, hskLevel: Int): [Word!]!
+  
+  # Learning progress
+  learningStats(wordId: ID!): LearningStats
+  weakWords(limit: Int = 10): [Word!]!
+}
+
+type Mutation {
+  # Word management
+  addWord(input: WordInput!): Word!
+  updateWord(id: ID!, input: WordInput!): Word!
+  deleteWord(id: ID!): Boolean!
+  
+  # Relationship management
+  addRelation(input: RelationInput!): Boolean!
+  removeRelation(sourceId: ID!, targetId: ID!, type: RelationType!): Boolean!
+  
+  # Learning progress
+  markReviewed(wordId: ID!, correct: Boolean!): LearningStats!
+  resetProgress(wordId: ID!): Boolean!
+}
+
+type Subscription {
+  wordAdded: Word!
+  progressUpdated(userId: ID!): LearningStats!
+}

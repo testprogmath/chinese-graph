@@ -1,0 +1,80 @@
+name: ✨ Feature Request
+description: Suggest a new feature for Chinese Learning Graph
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - annakhvorostianova
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please fill out the information below.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      description: Which part of the application does this feature affect?
+      options:
+        - Frontend (UI/UX)
+        - Backend (API/GraphQL)
+        - Graph Visualization
+        - Learning/Gamification
+        - Mobile App
+        - Authentication
+        - Data Management
+        - DevOps/Infrastructure
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Clear description of what you want to add
+      placeholder: |
+        As a user, I want to...
+        So that I can...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How do you think this should work?
+      placeholder: Describe your ideal implementation
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or features you've considered?
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - 🔴 High (blocking work)
+        - 🟡 Medium (important)
+        - 🟢 Low (nice to have)
+      default: 1
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Implementation Checklist
+      description: What needs to be done?
+      options:
+        - label: Design/mockups needed
+        - label: Backend changes required
+        - label: Frontend changes required
+        - label: Database schema changes
+        - label: Tests need to be written
+        - label: Documentation update needed

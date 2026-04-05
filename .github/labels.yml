@@ -1,0 +1,132 @@
+# GitHub Labels Configuration
+# Use with: npx github-label-sync --access-token <token> --labels .github/labels.yml <owner>/<repo>
+
+# Priority Labels
+- name: "priority:critical"
+  color: "b60205"
+  description: "P0 - Drop everything and fix"
+
+- name: "priority:high"
+  color: "ff9f1c"
+  description: "P1 - Important, do this week"
+
+- name: "priority:medium"
+  color: "fbca04"
+  description: "P2 - Normal priority"
+
+- name: "priority:low"
+  color: "0e8a16"
+  description: "P3 - Nice to have"
+
+# Type Labels
+- name: "type:feature"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "type:bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "type:documentation"
+  color: "0075ca"
+  description: "Documentation improvements"
+
+- name: "type:refactor"
+  color: "cfd3d7"
+  description: "Code refactoring"
+
+- name: "type:test"
+  color: "89e051"
+  description: "Testing related"
+
+- name: "type:infrastructure"
+  color: "c5def5"
+  description: "Infrastructure, CI/CD, DevOps"
+
+# Size Labels
+- name: "size:XS"
+  color: "009900"
+  description: "< 2 hours"
+
+- name: "size:S"
+  color: "77bb00"
+  description: "2-4 hours"
+
+- name: "size:M"
+  color: "eebb00"
+  description: "4-8 hours"
+
+- name: "size:L"
+  color: "ee9900"
+  description: "1-2 days"
+
+- name: "size:XL"
+  color: "ee5500"
+  description: "3-5 days"
+
+- name: "size:XXL"
+  color: "ff0000"
+  description: "> 1 week"
+
+# Status Labels
+- name: "status:blocked"
+  color: "d93f0b"
+  description: "Blocked by dependency"
+
+- name: "status:ready"
+  color: "0e8a16"
+  description: "Ready to work on"
+
+- name: "status:in-progress"
+  color: "fbca04"
+  description: "Currently being worked on"
+
+- name: "status:review"
+  color: "c2e0c6"
+  description: "In review"
+
+# Component Labels
+- name: "frontend"
+  color: "1d76db"
+  description: "Frontend (React, TypeScript)"
+
+- name: "backend"
+  color: "5319e7"
+  description: "Backend (Go, GraphQL)"
+
+- name: "mobile"
+  color: "006b75"
+  description: "Mobile app"
+
+- name: "database"
+  color: "cc317c"
+  description: "Database (Neo4j)"
+
+- name: "api"
+  color: "fbca04"
+  description: "API/GraphQL"
+
+- name: "ui/ux"
+  color: "7057ff"
+  description: "User interface/experience"
+
+# Special Labels
+- name: "good-first-issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help-wanted"
+  color: "008672"
+  description: "Extra attention needed"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Pull requests that update dependencies"
+
+- name: "security"
+  color: "ee0701"
+  description: "Security related"
+
+- name: "performance"
+  color: "f9a825"
+  description: "Performance optimization"
