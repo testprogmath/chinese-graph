@@ -1,0 +1,23 @@
+# Ignore everything first
+*
+
+# Then include what we need
+!go.mod
+!go.sum  
+!gqlgen.yml
+
+# Include directories - order is important
+!cmd
+!cmd/
+!cmd/**
+!graph
+!graph/
+!graph/**
+!internal
+!internal/
+!internal/**
+
+# Alternative: include all .go files anywhere
+!**/*.go
+!**/*.graphql
+!**/*.graphqls

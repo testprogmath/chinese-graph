@@ -4,8 +4,9 @@
 *.dll
 *.so
 *.dylib
-server
-chinese-graph
+/server
+/chinese-graph
+backend/server
 
 # Test binary, built with `go test -c`
 *.test

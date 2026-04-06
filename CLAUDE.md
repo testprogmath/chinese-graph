@@ -14,6 +14,34 @@ This document contains important gotchas, lessons learned, and best practices fr
 
 **Key Insight**: Docker looks for `.dockerignore` relative to the build context, not the repository root.
 
+### 1.5. .dockerignore Whitelist Approach
+
+**Problem**: Blacklist approach in .dockerignore can accidentally exclude needed directories.
+
+**Solution**: Use whitelist approach with explicit directory patterns:
+```dockerignore
+# Ignore everything by default
+*
+
+# But include needed files for Go build
+!go.mod
+!go.sum
+!gqlgen.yml
+
+# Include directories and their contents
+!cmd/
+!cmd/**
+!graph/
+!graph/**
+!internal/
+!internal/**
+```
+
+**Why This Works Better**: 
+- Explicit inclusion prevents accidental exclusions
+- Easier to debug what's being copied
+- More maintainable than long blacklists
+
 ```yaml
 # docker-compose.prod.yml
 services:
