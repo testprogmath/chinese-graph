@@ -15,11 +15,6 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Debug: show directory structure
-RUN ls -la
-RUN ls -la cmd/ || echo "cmd directory not found"
-RUN ls -la cmd/server/ || echo "cmd/server directory not found"
-
 # Build the binary with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s" \
