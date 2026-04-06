@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { MockedProvider } from '@apollo/client/testing'
 import Home from '../page'
 
 // Mock Next.js router
@@ -18,9 +19,17 @@ jest.mock('next/navigation', () => ({
   }
 }))
 
+const renderWithApollo = (component: React.ReactElement) => {
+  return render(
+    <MockedProvider mocks={[]}>
+      {component}
+    </MockedProvider>
+  )
+}
+
 describe('Home page', () => {
   it('renders the main heading', () => {
-    render(<Home />)
+    renderWithApollo(<Home />)
     
     const heading = screen.getByRole('heading', {
       name: /chinese learning graph/i,
@@ -30,18 +39,18 @@ describe('Home page', () => {
   })
 
   it('displays the description text', () => {
-    render(<Home />)
+    renderWithApollo(<Home />)
     
     const description = screen.getByText(/learn chinese words through visual connections/i)
     
     expect(description).toBeInTheDocument()
   })
 
-  it('shows development status', () => {
-    render(<Home />)
+  it('shows the footer text', () => {
+    renderWithApollo(<Home />)
     
-    const status = screen.getByText(/frontend under development/i)
+    const footer = screen.getByText(/explore word relationships.*practice with context.*learn through connections/i)
     
-    expect(status).toBeInTheDocument()
+    expect(footer).toBeInTheDocument()
   })
 })
