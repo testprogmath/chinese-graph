@@ -15,6 +15,11 @@ RUN go mod download
 # Copy source code
 COPY . .
 
+# Debug: Show what was copied
+RUN ls -la
+RUN ls -la cmd/ || echo "cmd directory not found"
+RUN find . -name "*.go" | head -10
+
 # Build the binary with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s" \
