@@ -1,61 +1,20 @@
-# Git
-.git
-.gitignore
+# Ignore everything by default
+*
 
-# Docker
-Dockerfile
-.dockerignore
+# But include needed files for Go build
+!go.mod
+!go.sum
+!gqlgen.yml
 
-# CI/CD
-.github/
-.gitlab-ci.yml
-.circleci/
+# Include directories and their contents
+!cmd/
+!cmd/**
+!graph/
+!graph/**
+!internal/
+!internal/**
 
-# Documentation
-README.md
-*.md
-docs/
-LICENSE
-
-# Development
-.env
-.env.*
-!.env.example
-*.log
-*.pid
-*.seed
-*.pid.lock
-
-# Go
-*.test
-*.out
-vendor/
-coverage.*
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-.DS_Store
-
-# Node (for frontend)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Build artifacts
-dist/
-build/
-tmp/
-
-# OS
-Thumbs.db
-.DS_Store
-
-# Testing
-test/
-tests/
-*_test.go
+# Include specific file types everywhere
+!**/*.go
+!**/*.graphql
+!**/*.graphqls

@@ -15,8 +15,8 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# List directories to verify cmd is included
-RUN ls -la cmd/
+# Debug: Show what was copied and find Go files
+RUN ls -la && find . -name "*.go" -type f | head -10
 
 # Build the binary with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
