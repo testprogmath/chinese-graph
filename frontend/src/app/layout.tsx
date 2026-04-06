@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import { ApolloProvider } from '@/components/ApolloProvider'
 
 export const metadata: Metadata = {
   title: 'Chinese Learning Graph',
@@ -13,7 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ApolloProvider>
+          {children}
+        </ApolloProvider>
+      </body>
     </html>
   )
 }
