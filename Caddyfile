@@ -1,8 +1,9 @@
 happyhanzi.com {
     # GraphQL API routes
     reverse_proxy /graphql backend:8080
+    reverse_proxy /query backend:8080
     reverse_proxy /api/* backend:8080
     
-    # Frontend application (default route)
-    reverse_proxy frontend:3000
+    # Frontend application (all other routes)
+    reverse_proxy * frontend:3000
 }
