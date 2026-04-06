@@ -3,8 +3,6 @@
 .gitignore
 
 # Docker
-docker-compose.yml
-docker-compose.*.yml
 Dockerfile
 .dockerignore
 
