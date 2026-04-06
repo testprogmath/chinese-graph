@@ -1,0 +1,354 @@
+{
+  "info": {
+    "name": "Chinese Learning Graph API",
+    "description": "GraphQL API for Chinese word learning with mindmap relationships",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "chinese-learning-graph-api",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/health",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        },
+        "description": "Check if the backend service is running"
+      },
+      "response": []
+    },
+    {
+      "name": "GraphQL Playground",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}/playground",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "playground"
+          ]
+        },
+        "description": "Access the GraphQL playground interface"
+      },
+      "response": []
+    },
+    {
+      "name": "Get HSK Level 1 Words",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetHSKWords($level: Int!, $limit: Int!) {\\n    wordsByHSK(level: $level, limit: $limit) {\\n      id\\n      hanzi\\n      traditional\\n      pinyin\\n      meanings\\n      hskLevel\\n      frequency\\n    }\\n  }\",\n  \"variables\": {\n    \"level\": 1,\n    \"limit\": 10\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Get words from HSK level 1"
+      },
+      "response": []
+    },
+    {
+      "name": "Search Words",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query SearchWords($query: String!, $limit: Int!) {\\n    searchWords(query: $query, limit: $limit) {\\n      id\\n      hanzi\\n      traditional\\n      pinyin\\n      meanings\\n      hskLevel\\n    }\\n  }\",\n  \"variables\": {\n    \"query\": \"好\",\n    \"limit\": 5\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Search for words containing specific characters"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Word by Hanzi",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetWord($hanzi: String!) {\\n    word(hanzi: $hanzi) {\\n      id\\n      hanzi\\n      traditional\\n      pinyin\\n      meanings\\n      hskLevel\\n      frequency\\n      compounds {\\n        word {\\n          hanzi\\n          pinyin\\n          meanings\\n        }\\n        relationshipType\\n        meaning\\n        phrase\\n        usageExample\\n      }\\n      phrases {\\n        word {\\n          hanzi\\n          pinyin\\n        }\\n        relationshipType\\n        meaning\\n        phrase\\n      }\\n    }\\n  }\",\n  \"variables\": {\n    \"hanzi\": \"好\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Get detailed information about a specific word"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Word Graph (Mindmap)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetWordGraph($hanzi: String!, $depth: Int!, $maxNodes: Int!) {\\n    wordGraph(hanzi: $hanzi, depth: $depth, maxNodes: $maxNodes) {\\n      centerWord {\\n        id\\n        hanzi\\n        pinyin\\n        meanings\\n      }\\n      nodes {\\n        id\\n        word {\\n          hanzi\\n          pinyin\\n          meanings\\n        }\\n        distance\\n        importance\\n      }\\n      edges {\\n        id\\n        source\\n        target\\n        type\\n        label\\n        weight\\n        bidirectional\\n      }\\n      depth\\n    }\\n  }\",\n  \"variables\": {\n    \"hanzi\": \"好\",\n    \"depth\": 2,\n    \"maxNodes\": 15\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Get word relationship graph for mindmap visualization"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Daily Words",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetDailyWords($count: Int!, $hskLevel: Int) {\\n    dailyWords(count: $count, hskLevel: $hskLevel) {\\n      id\\n      hanzi\\n      pinyin\\n      meanings\\n      hskLevel\\n    }\\n  }\",\n  \"variables\": {\n    \"count\": 5,\n    \"hskLevel\": 1\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Get daily recommended words for learning"
+      },
+      "response": []
+    },
+    {
+      "name": "Add New Word",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation AddWord($input: WordInput!) {\\n    addWord(input: $input) {\\n      id\\n      hanzi\\n      traditional\\n      pinyin\\n      meanings\\n      hskLevel\\n      frequency\\n    }\\n  }\",\n  \"variables\": {\n    \"input\": {\n      \"hanzi\": \"你好\",\n      \"traditional\": \"你好\",\n      \"pinyin\": \"nǐ hǎo\",\n      \"meanings\": [\"hello\", \"hi\"],\n      \"hskLevel\": 1,\n      \"frequency\": 100\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Add a new Chinese word to the database"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Basic HSK1 Word",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation AddWord($input: WordInput!) {\\n    addWord(input: $input) {\\n      id\\n      hanzi\\n      pinyin\\n      meanings\\n      hskLevel\\n    }\\n  }\",\n  \"variables\": {\n    \"input\": {\n      \"hanzi\": \"好\",\n      \"pinyin\": \"hǎo\",\n      \"meanings\": [\"good\", \"well\", \"fine\"],\n      \"hskLevel\": 1,\n      \"frequency\": 95\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Add the word '好' (good) to test basic functionality"
+      },
+      "response": []
+    },
+    {
+      "name": "Add Word Relationship",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation AddRelation($input: RelationInput!) {\\n    addRelation(input: $input)\\n  }\",\n  \"variables\": {\n    \"input\": {\n      \"sourceId\": \"word1\",\n      \"targetId\": \"word2\",\n      \"type\": \"COMPOUND\",\n      \"meaning\": \"forms compound word\",\n      \"phrase\": \"好看\",\n      \"pinyin\": \"hǎo kàn\",\n      \"usageExample\": \"这个很好看 (This is very beautiful)\"\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Create relationship between two words (requires word IDs)"
+      },
+      "response": []
+    },
+    {
+      "name": "Update Word",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation UpdateWord($id: ID!, $input: WordInput!) {\\n    updateWord(id: $id, input: $input) {\\n      id\\n      hanzi\\n      pinyin\\n      meanings\\n      hskLevel\\n    }\\n  }\",\n  \"variables\": {\n    \"id\": \"word_id_here\",\n    \"input\": {\n      \"hanzi\": \"好\",\n      \"pinyin\": \"hǎo\",\n      \"meanings\": [\"good\", \"well\", \"fine\", \"okay\"],\n      \"hskLevel\": 1,\n      \"frequency\": 98\n    }\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Update an existing word (replace word_id_here with actual ID)"
+      },
+      "response": []
+    },
+    {
+      "name": "Get Learning Stats",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query GetLearningStats($wordId: ID!) {\\n    learningStats(wordId: $wordId) {\\n      wordId\\n      timesReviewed\\n      correctCount\\n      lastReviewed\\n      strength\\n    }\\n  }\",\n  \"variables\": {\n    \"wordId\": \"word_id_here\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Get learning progress for a specific word"
+      },
+      "response": []
+    },
+    {
+      "name": "Mark Word as Reviewed",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"mutation MarkReviewed($wordId: ID!, $correct: Boolean!) {\\n    markReviewed(wordId: $wordId, correct: $correct) {\\n      wordId\\n      timesReviewed\\n      correctCount\\n      strength\\n      lastReviewed\\n    }\\n  }\",\n  \"variables\": {\n    \"wordId\": \"word_id_here\",\n    \"correct\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/query",
+          "host": [
+            "{{BASE_URL}}"
+          ],
+          "path": [
+            "query"
+          ]
+        },
+        "description": "Record a learning session for a word"
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://204.168.217.208"
+    }
+  ]
+}
