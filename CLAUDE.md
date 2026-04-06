@@ -287,6 +287,72 @@ RUN go build ...
 - Disk space on VPS
 - Service logs for errors
 
+## Frontend & CI/CD Gotchas
+
+### 20. NPM Package Lock Synchronization
+
+**Problem**: `npm ci` fails with "package.json and package-lock.json are in sync" error after adding new dependencies.
+
+**Error Message**:
+```
+npm error Missing: @testing-library/jest-dom@6.1.5 from lock file
+npm error Missing: @testing-library/react@14.1.2 from lock file
+```
+
+**Root Cause**: Adding dependencies to `package.json` manually without updating `package-lock.json`.
+
+**Solution**: 
+1. Run `npm install` locally to regenerate lock file
+2. Commit both `package.json` and `package-lock.json`
+3. Keep using `npm ci` in CI for performance and reliability
+
+**Prevention**: Always use `npm install <package>` instead of manually editing `package.json`.
+
+### 21. ESLint Configuration with Next.js
+
+**Problem**: ESLint fails with "Definition for rule '@typescript-eslint/*' was not found" when extending TypeScript ESLint configs.
+
+**Root Cause**: `next/core-web-vitals` already includes TypeScript ESLint support, so manually adding `@typescript-eslint/recommended` creates conflicts.
+
+**Solution**: Use only `next/core-web-vitals` and standard ESLint rules:
+```json
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "prefer-const": "error"
+  }
+}
+```
+
+**Avoid**: Redundant TypeScript ESLint extensions when using Next.js presets.
+
+### 22. GitHub Projects Classic Deprecation
+
+**Problem**: GitHub Actions fail with "Projects (classic) is being deprecated" error.
+
+**Failed Action**: `alex-page/github-project-automation-plus@v0.8.3`
+
+**Solution**: Remove deprecated project automation workflows that use classic projects API.
+
+**Alternative**: Use the new GitHub Projects experience with different automation or manual project management.
+
+**Key Learning**: Monitor GitHub deprecation notices and update automation accordingly.
+
+### 23. Testing Library Dependencies
+
+**Problem**: TypeScript compilation fails with missing React Testing Library types.
+
+**Missing Dependencies**:
+- `@testing-library/react` - Component testing utilities
+- `@testing-library/jest-dom` - Additional DOM matchers (`toBeInTheDocument`)
+
+**Solution**: Add both dependencies to `devDependencies` and ensure Jest setup imports `@testing-library/jest-dom`.
+
+**Configuration**: Jest setup should include:
+```javascript
+import '@testing-library/jest-dom'
+```
+
 ---
 
 ## Quick Reference Commands
