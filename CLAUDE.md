@@ -179,6 +179,10 @@ RUN ls -la cmd/     # Check specific directories
 
 **Remember to remove** debug steps after fixing the issue.
 
+**Docker Cache Issues**: When troubleshooting build context issues, Docker layer caching can mask the problem. Even after fixing .dockerignore, cached layers may still use old build context. Add debug commands to invalidate cache and force rebuild.
+
+**Context Transfer Size Indicator**: Watch for suspiciously small context transfer sizes (e.g., "transferring context: 794B" vs expected ~50KB+ for full backend). This indicates files are being excluded by .dockerignore patterns.
+
 ### 14. GitHub Actions Debugging
 
 **Use detailed error logs**:
