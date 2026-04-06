@@ -1,4 +1,18 @@
 services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: chinese-graph-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
   backend:
     build: 
       context: ./backend
@@ -69,6 +83,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
+      - frontend
       - backend
     networks:
       - app-network
