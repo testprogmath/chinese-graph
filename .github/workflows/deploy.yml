@@ -30,7 +30,7 @@ jobs:
             set -e
             
             # Configuration
-            APP_DIR=~/apps/chinese-graph
+            APP_DIR=~/apps/chinese-app
             REPO_URL=https://github.com/testprogmath/chinese-graph.git
             
             # Ensure app directory exists
@@ -59,35 +59,20 @@ jobs:
             # Ensure nginx directories exist
             mkdir -p nginx/ssl
             
-            # Pull latest images
-            echo "Pulling Docker images..."
-            docker-compose -f docker-compose.prod.yml pull || docker compose -f docker-compose.prod.yml pull
+            # Deploy services
+            echo "Deploying services..."
+            docker compose -f docker-compose.prod.yml up -d --build
             
-            # Build and restart services
-            echo "Building and starting services..."
-            docker-compose -f docker-compose.prod.yml up -d --build --remove-orphans || docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
-            
-            # Wait for services to be healthy
-            echo "Waiting for services to be healthy..."
-            sleep 10
-            
-            # Run migrations/seed if needed (first deployment)
-            if ! docker-compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null && \
-               ! docker compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null; then
-              echo "Backend health check failed, waiting longer..."
-              sleep 20
-            fi
+            # Wait for services to start
+            echo "Waiting for services to start..."
+            sleep 15
             
             # Clean up old images
             docker image prune -f
             
-            # Show status
+            # Show final status
             echo "Deployment complete. Service status:"
-            docker-compose -f docker-compose.prod.yml ps || docker compose -f docker-compose.prod.yml ps
-            
-            # Show logs from last 20 lines
-            echo "Recent logs:"
-            docker-compose -f docker-compose.prod.yml logs --tail=20 || docker compose -f docker-compose.prod.yml logs --tail=20
+            docker compose -f docker-compose.prod.yml ps
           ENDSSH
 
       - name: Health Check

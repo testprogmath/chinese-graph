@@ -18,7 +18,7 @@ COPY . .
 # Build the binary with optimizations
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s" \
-    -o server cmd/server/main.go
+    -o server ./cmd/server
 
 # Final stage
 FROM alpine:3.19
