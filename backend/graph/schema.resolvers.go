@@ -159,8 +159,8 @@ func (r *queryResolver) SearchWords(ctx context.Context, query string, limit *in
 	return repo.Search(ctx, query, limitVal)
 }
 
-// WordsByHSK is the resolver for the wordsByHSK field.
-func (r *queryResolver) WordsByHSK(ctx context.Context, level int, limit *int) ([]*domain.Word, error) {
+// WordsByHsk is the resolver for the wordsByHSK field.
+func (r *queryResolver) WordsByHsk(ctx context.Context, level int, limit *int) ([]*domain.Word, error) {
 	session := r.DB.Session(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead})
 	defer session.Close(ctx)
 

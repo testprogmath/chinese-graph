@@ -1,0 +1,105 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: ${{ secrets.USER }}
+        run: |
+          ssh ${USER}@${HOST} << 'ENDSSH'
+            set -e
+            
+            # Configuration
+            APP_DIR=~/apps/chinese-graph
+            REPO_URL=https://github.com/testprogmath/chinese-graph.git
+            
+            # Ensure app directory exists
+            mkdir -p $APP_DIR
+            cd $APP_DIR
+            
+            # Clone or update repository
+            if [ ! -d ".git" ]; then
+              echo "Cloning repository..."
+              git clone $REPO_URL .
+            else
+              echo "Updating repository..."
+              git fetch origin
+              git reset --hard origin/main
+            fi
+            
+            # Create .env file if it doesn't exist
+            if [ ! -f .env ]; then
+              echo "Creating .env file..."
+              cat > .env << 'EOF'
+          NEO4J_PASSWORD=chinesegraph123
+          NODE_ENV=production
+          EOF
+            fi
+            
+            # Ensure nginx directories exist
+            mkdir -p nginx/ssl
+            
+            # Pull latest images
+            echo "Pulling Docker images..."
+            docker compose -f docker-compose.prod.yml pull
+            
+            # Build and restart services
+            echo "Building and starting services..."
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            
+            # Wait for services to be healthy
+            echo "Waiting for services to be healthy..."
+            sleep 10
+            
+            # Run migrations/seed if needed (first deployment)
+            if ! docker compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null; then
+              echo "Backend health check failed, waiting longer..."
+              sleep 20
+            fi
+            
+            # Clean up old images
+            docker image prune -f
+            
+            # Show status
+            echo "Deployment complete. Service status:"
+            docker compose -f docker-compose.prod.yml ps
+            
+            # Show logs from last 20 lines
+            echo "Recent logs:"
+            docker compose -f docker-compose.prod.yml logs --tail=20
+          ENDSSH
+
+      - name: Health Check
+        env:
+          HOST: ${{ secrets.HOST }}
+        run: |
+          sleep 5
+          echo "Checking service health..."
+          
+          # Check if nginx is responding
+          if curl -f -s -o /dev/null -w "%{http_code}" http://${HOST}/health | grep -q "200"; then
+            echo "✅ Health check passed!"
+          else
+            echo "❌ Health check failed!"
+            exit 1
+          fi
