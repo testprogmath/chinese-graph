@@ -269,9 +269,64 @@ RUN go build ...
 
 **This order maximizes Docker layer cache hits.**
 
+## HTTPS Deployment Gotchas
+
+### 24. Caddy Port Exposure Confusion
+
+**Problem**: User reported "Caddy container does NOT expose ports 80 and 443" and HTTPS not accessible.
+
+**Investigation**: The `docker-compose.prod.yml` file **correctly** had port mappings:
+```yaml
+caddy:
+  ports:
+    - "80:80"  
+    - "443:443"
+```
+
+**Root Cause**: The issue was **not** missing port configuration but likely:
+1. **Deployment timing**: Services might have been in restart state during user check
+2. **Health check mismatch**: Deployment health check was using old HTTP nginx endpoint instead of HTTPS Caddy endpoint
+
+**Solution**:
+1. **Re-deployed** the same configuration to ensure services were properly running
+2. **Updated health check** in `.github/workflows/deploy.yml` from `http://${HOST}/health` to `https://${HOST}`
+3. **Cleaned up** obsolete nginx directory references in deployment script
+
+**Verification**: User confirmed HTTPS working with:
+```bash
+curl -I https://happyhanzi.com
+# Returns: HTTP/2 200 with "via: 1.1 Caddy"
+```
+
+**Key Learning**: When switching reverse proxy tools (nginx → Caddy), update **all** references including:
+- Health checks in deployment workflows
+- Deployment scripts (directory creation, cleanup)
+- Documentation and error messages
+
+### 25. HTTPS Health Check Migration
+
+**Problem**: Deployment health checks failing after nginx → Caddy migration.
+
+**Old Health Check** (nginx era):
+```bash
+curl -f http://${HOST}/health
+```
+
+**New Health Check** (Caddy era):
+```bash
+curl -f https://${HOST}
+```
+
+**Why This Matters**:
+- Caddy automatically handles HTTP → HTTPS redirect
+- Health checks should validate the actual service endpoint users will access
+- HTTPS validation ensures Let's Encrypt certificate is working
+
+**Prevention**: When migrating reverse proxy tools, audit all automation scripts for hardcoded endpoints.
+
 ## Maintenance Notes
 
-### 18. Regular Updates
+### 26. Regular Updates
 
 **Keep updated**:
 - Go version in Dockerfile

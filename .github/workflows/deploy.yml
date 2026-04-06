@@ -56,8 +56,8 @@ jobs:
           EOF
             fi
             
-            # Ensure nginx directories exist
-            mkdir -p nginx/ssl
+            # Clean up any previous nginx directories (nginx is no longer used)
+            rm -rf nginx/
             
             # Deploy services
             echo "Deploying services..."
@@ -82,10 +82,10 @@ jobs:
           sleep 5
           echo "Checking service health..."
           
-          # Check if nginx is responding
-          if curl -f -s -o /dev/null -w "%{http_code}" http://${HOST}/health | grep -q "200"; then
-            echo "✅ Health check passed!"
+          # Check if Caddy HTTPS is responding
+          if curl -f -s -o /dev/null -w "%{http_code}" https://${HOST} | grep -q "200"; then
+            echo "✅ HTTPS health check passed!"
           else
-            echo "❌ Health check failed!"
+            echo "❌ HTTPS health check failed!"
             exit 1
           fi
