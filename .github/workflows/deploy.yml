@@ -61,18 +61,19 @@ jobs:
             
             # Pull latest images
             echo "Pulling Docker images..."
-            docker compose -f docker-compose.prod.yml pull
+            docker-compose -f docker-compose.prod.yml pull || docker compose -f docker-compose.prod.yml pull
             
             # Build and restart services
             echo "Building and starting services..."
-            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker-compose -f docker-compose.prod.yml up -d --build --remove-orphans || docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
             
             # Wait for services to be healthy
             echo "Waiting for services to be healthy..."
             sleep 10
             
             # Run migrations/seed if needed (first deployment)
-            if ! docker compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null; then
+            if ! docker-compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null && \
+               ! docker compose -f docker-compose.prod.yml exec -T backend wget --spider http://localhost:8080/health 2>/dev/null; then
               echo "Backend health check failed, waiting longer..."
               sleep 20
             fi
@@ -82,11 +83,11 @@ jobs:
             
             # Show status
             echo "Deployment complete. Service status:"
-            docker compose -f docker-compose.prod.yml ps
+            docker-compose -f docker-compose.prod.yml ps || docker compose -f docker-compose.prod.yml ps
             
             # Show logs from last 20 lines
             echo "Recent logs:"
-            docker compose -f docker-compose.prod.yml logs --tail=20
+            docker-compose -f docker-compose.prod.yml logs --tail=20 || docker compose -f docker-compose.prod.yml logs --tail=20
           ENDSSH
 
       - name: Health Check

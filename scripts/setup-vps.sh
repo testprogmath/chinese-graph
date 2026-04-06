@@ -49,11 +49,11 @@ fi
 
 # Pull Docker images
 echo "🐳 Pulling Docker images..."
-docker compose -f docker-compose.prod.yml pull
+docker-compose -f docker-compose.prod.yml pull || docker compose -f docker-compose.prod.yml pull
 
 # Start services
 echo "🚀 Starting services..."
-docker compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml up -d --build || docker compose -f docker-compose.prod.yml up -d --build
 
 # Wait for services to be ready
 echo "⏳ Waiting for services to be ready..."
