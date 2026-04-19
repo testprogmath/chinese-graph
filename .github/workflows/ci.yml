@@ -52,7 +52,7 @@ jobs:
           NEO4J_PASSWORD: testpassword
       
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           file: ./backend/coverage.out
           flags: backend
@@ -88,7 +88,7 @@ jobs:
         run: npm run test -- --coverage
       
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           file: ./frontend/coverage/lcov.info
           flags: frontend
