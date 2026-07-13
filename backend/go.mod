@@ -3,7 +3,7 @@ module github.com/chinese-graph/backend
 go 1.25.0
 
 require (
-	github.com/99designs/gqlgen v0.17.93
+	github.com/99designs/gqlgen v0.17.94
 	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
 	github.com/vektah/gqlparser/v2 v2.5.36
 )
@@ -15,5 +15,5 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
 	github.com/sosodev/duration v1.4.0 // indirect
-	golang.org/x/sync v0.21.0 // indirect
+	golang.org/x/sync v0.22.0 // indirect
 )
