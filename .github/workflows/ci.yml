@@ -32,7 +32,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -66,7 +66,7 @@ jobs:
         working-directory: ./frontend
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -101,7 +101,7 @@ jobs:
     if: github.event_name == 'push'
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -154,7 +154,7 @@ jobs:
       url: ${{ steps.deploy.outputs.url }}
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Deploy to Preview
         id: deploy
@@ -173,7 +173,7 @@ jobs:
       url: https://chinese-graph.app
     
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
       - name: Deploy to Production
         run: |
